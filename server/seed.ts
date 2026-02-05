@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { wallets, transactions, classificationRules, disposals } from "@shared/schema";
+import { wallets, transactions, classificationRules, disposals } from "../shared/schema";
 import { sql } from "drizzle-orm";
 
 export async function seedDatabase() {

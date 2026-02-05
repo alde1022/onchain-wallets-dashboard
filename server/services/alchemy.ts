@@ -1,4 +1,4 @@
-import type { InsertTransaction } from "@shared/schema";
+import type { InsertTransaction } from "../../shared/schema";
 
 const ALCHEMY_NETWORK_MAP: Record<string, string> = {
   ethereum: "eth-mainnet",

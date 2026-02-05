@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertWalletSchema, insertRuleSchema } from "@shared/schema";
+import { insertWalletSchema, insertRuleSchema } from "../shared/schema";
 import { z } from "zod";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./auth";
 
@@ -324,33 +324,41 @@ export async function registerRoutes(
 
       switch (reportId) {
         case "form8949":
-          csvContent = "Description,Date Acquired,Date Sold,Proceeds,Cost Basis,Gain or Loss\n";
+          csvContent = "Description,Date Acquired,Date Sold,Proceeds,Cost Basis,Gain or Loss
+";
           for (const d of summary.disposals) {
             csvContent += `"${d.tokenSymbol}",` +
               `"${new Date(d.disposedAt).toISOString().split('T')[0]}",` +
               `"${new Date(d.disposedAt).toISOString().split('T')[0]}",` +
               `${d.proceedsUsd},` +
               `${d.costBasisUsd},` +
-              `${d.gainLossUsd}\n`;
+              `${d.gainLossUsd}
+`;
           }
           filename = `form8949-${year}.csv`;
           break;
 
         case "schedule-d":
-          csvContent = "Category,Short-Term Gain,Short-Term Loss,Long-Term Gain,Long-Term Loss,Net\n";
-          csvContent += `"Summary",${summary.shortTermGains},${summary.shortTermLosses},${summary.longTermGains},${summary.longTermLosses},${summary.netGainLoss}\n`;
+          csvContent = "Category,Short-Term Gain,Short-Term Loss,Long-Term Gain,Long-Term Loss,Net
+";
+          csvContent += `"Summary",${summary.shortTermGains},${summary.shortTermLosses},${summary.longTermGains},${summary.longTermLosses},${summary.netGainLoss}
+`;
           filename = `schedule-d-${year}.csv`;
           break;
 
         case "income":
-          csvContent = "Type,Amount USD\n";
-          csvContent += `"Total Income",${summary.totalIncome}\n`;
+          csvContent = "Type,Amount USD
+";
+          csvContent += `"Total Income",${summary.totalIncome}
+`;
           filename = `income-report-${year}.csv`;
           break;
 
         default:
-          csvContent = "Report Type,Data\n";
-          csvContent += `"${reportId}","Generated for ${year}"\n`;
+          csvContent = "Report Type,Data
+";
+          csvContent += `"${reportId}","Generated for ${year}"
+`;
           filename = `${reportId}-${year}.csv`;
       }
 
@@ -520,19 +528,28 @@ export async function registerRoutes(
           if (parsed.command === "status" || parsed.command === "start") {
             const stats = await storage.getDashboardStats(link.userId);
             await sendMessage(parsed.chatId, 
-              `<b>Your CryptoTax Pro Status</b>\n\n` +
-              `Wallets: ${stats.totalWallets}\n` +
-              `Transactions: ${stats.totalTransactions}\n` +
+              `<b>Your CryptoTax Pro Status</b>
+
+` +
+              `Wallets: ${stats.totalWallets}
+` +
+              `Transactions: ${stats.totalTransactions}
+` +
               `<b>Needs Review: ${stats.needsReview}</b>`,
               { parseMode: "HTML" }
             );
           }
           if (parsed.command === "help") {
             await sendMessage(parsed.chatId,
-              `<b>CryptoTax Pro Commands</b>\n\n` +
-              `<code>status</code> - Show your stats\n` +
-              `<code>classify [txId] [type]</code> - Classify a transaction\n` +
-              `\nOr just reply with a classification type (swap, income, airdrop, etc.) when prompted!`,
+              `<b>CryptoTax Pro Commands</b>
+
+` +
+              `<code>status</code> - Show your stats
+` +
+              `<code>classify [txId] [type]</code> - Classify a transaction
+` +
+              `
+Or just reply with a classification type (swap, income, airdrop, etc.) when prompted!`,
               { parseMode: "HTML" }
             );
           }

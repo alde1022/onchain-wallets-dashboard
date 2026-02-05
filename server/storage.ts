@@ -23,7 +23,7 @@ import {
   type DashboardStats,
   type InsertTelegramLink,
   type TelegramLink,
-} from "@shared/schema";
+} from "../shared/schema";
 
 export interface IStorage {
   // Wallets

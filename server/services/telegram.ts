@@ -1,4 +1,4 @@
-import type { Transaction, TelegramLink } from "@shared/schema";
+import type { Transaction, TelegramLink } from "../../shared/schema";
 
 const TELEGRAM_API_BASE = "https://api.telegram.org/bot";
 
