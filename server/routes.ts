@@ -324,8 +324,7 @@ export async function registerRoutes(
 
       switch (reportId) {
         case "form8949":
-          csvContent = "Description,Date Acquired,Date Sold,Proceeds,Cost Basis,Gain or Loss
-";
+          csvContent = "Description,Date Acquired,Date Sold,Proceeds,Cost Basis,Gain or Loss\n";
           for (const d of summary.disposals) {
             csvContent += `"${d.tokenSymbol}",` +
               `"${new Date(d.disposedAt).toISOString().split('T')[0]}",` +
@@ -339,24 +338,21 @@ export async function registerRoutes(
           break;
 
         case "schedule-d":
-          csvContent = "Category,Short-Term Gain,Short-Term Loss,Long-Term Gain,Long-Term Loss,Net
-";
+          csvContent = "Category,Short-Term Gain,Short-Term Loss,Long-Term Gain,Long-Term Loss,Net\n";
           csvContent += `"Summary",${summary.shortTermGains},${summary.shortTermLosses},${summary.longTermGains},${summary.longTermLosses},${summary.netGainLoss}
 `;
           filename = `schedule-d-${year}.csv`;
           break;
 
         case "income":
-          csvContent = "Type,Amount USD
-";
+          csvContent = "Type,Amount USD\n";
           csvContent += `"Total Income",${summary.totalIncome}
 `;
           filename = `income-report-${year}.csv`;
           break;
 
         default:
-          csvContent = "Report Type,Data
-";
+          csvContent = "Report Type,Data\n";
           csvContent += `"${reportId}","Generated for ${year}"
 `;
           filename = `${reportId}-${year}.csv`;
