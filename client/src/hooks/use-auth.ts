@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { initializeApp, getApps } from "firebase/app";
 import { 
   getAuth, 
@@ -10,14 +10,14 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 
-// Firebase config - using the shared atd-auth project
+// Firebase config from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyB7MzB4s6q7SI11eqcT2ZGHYHL_RYijtXU",
-  authDomain: "atd-auth-2cd4c.firebaseapp.com",
-  projectId: "atd-auth-2cd4c",
-  storageBucket: "atd-auth-2cd4c.firebasestorage.app",
-  messagingSenderId: "499552098742",
-  appId: "1:499552098742:web:0109d2b2f865757c33c917",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
