@@ -1,47 +1,98 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { User } from "@shared/models/auth";
+import { initializeApp, getApps } from "firebase/app";
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  signInWithPopup, 
+  GoogleAuthProvider,
+  signOut,
+  type User as FirebaseUser
+} from "firebase/auth";
+import { useEffect, useState } from "react";
 
-async function fetchUser(): Promise<User | null> {
-  const response = await fetch("/api/auth/user", {
-    credentials: "include",
-  });
+// Firebase config - using the shared atd-auth project
+const firebaseConfig = {
+  apiKey: "AIzaSyB7MzB4s6q7SI11eqcT2ZGHYHL_RYijtXU",
+  authDomain: "atd-auth-2cd4c.firebaseapp.com",
+  projectId: "atd-auth-2cd4c",
+  storageBucket: "atd-auth-2cd4c.firebasestorage.app",
+  messagingSenderId: "499552098742",
+  appId: "1:499552098742:web:0109d2b2f865757c33c917",
+};
 
-  if (response.status === 401) {
-    return null;
-  }
+// Initialize Firebase
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
-  if (!response.ok) {
-    throw new Error(`${response.status}: ${response.statusText}`);
-  }
-
-  return response.json();
+// Helper to get ID token for API requests
+export async function getIdToken(): Promise<string | null> {
+  const user = auth.currentUser;
+  if (!user) return null;
+  return user.getIdToken();
 }
 
-async function logout(): Promise<void> {
-  window.location.href = "/api/logout";
+// Helper for authenticated API requests
+export async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  const token = await getIdToken();
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
+  
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 export function useAuth() {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const queryClient = useQueryClient();
-  const { data: user, isLoading } = useQuery<User | null>({
-    queryKey: ["/api/auth/user"],
-    queryFn: fetchUser,
-    retry: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
 
-  const logoutMutation = useMutation({
-    mutationFn: logout,
-    onSuccess: () => {
-      queryClient.setQueryData(["/api/auth/user"], null);
-    },
-  });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setIsLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  const loginWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      queryClient.clear();
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
+    }
+  };
 
   return {
-    user,
+    user: user ? {
+      id: user.uid,
+      email: user.email,
+      firstName: user.displayName?.split(" ")[0] || null,
+      lastName: user.displayName?.split(" ").slice(1).join(" ") || null,
+      profileImageUrl: user.photoURL,
+    } : null,
+    firebaseUser: user,
     isLoading,
     isAuthenticated: !!user,
-    logout: logoutMutation.mutate,
-    isLoggingOut: logoutMutation.isPending,
+    loginWithGoogle,
+    logout,
   };
 }
