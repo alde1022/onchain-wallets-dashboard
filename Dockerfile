@@ -1,21 +1,21 @@
-FROM node:22-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files first for better caching
+COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # Copy source files
 COPY . .
 
-# Build the app
+# Build the app (this will fail if there are TS errors)
 RUN npm run build
 
 # Expose port
 EXPOSE 5000
 
-# Run database migrations and start
-CMD ["sh", "-c", "npm run db:push && npm start"]
+# Start the app
+CMD ["npm", "start"]
