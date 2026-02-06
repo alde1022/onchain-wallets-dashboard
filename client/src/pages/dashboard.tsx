@@ -86,10 +86,12 @@ export default function Dashboard() {
             Overview of your crypto tax status for 2024
           </p>
         </div>
-        <Link href="/wallets"><Button data-testid="button-add-wallet">
+        <Link href="/wallets">
+          <Button data-testid="button-add-wallet">
           <PlusCircle className="h-4 w-4 mr-2" />
           Add Wallet
-        </Button></Link>
+          </Button>
+        </Link>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -171,7 +173,7 @@ export default function Dashboard() {
               <a href="/transactions" data-testid="link-view-all-transactions">
                 View All <ArrowRight className="h-4 w-4 ml-1" />
               </a>
-            </Button></Link>
+            </Button>
           </CardHeader>
           <CardContent>
             {isLoading ? (
