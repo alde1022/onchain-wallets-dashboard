@@ -4,13 +4,18 @@ import { getIdToken } from "@/hooks/use-auth";
 const API_BASE = import.meta.env.VITE_API_URL || "";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
-  const token = await getIdToken();
-  if (!token) {
+  try {
+    const token = await getIdToken();
+    if (!token) {
+      return {};
+    }
+    return {
+      "Authorization": `Bearer ${token}`,
+    };
+  } catch (error) {
+    console.error("Failed to get auth token:", error);
     return {};
   }
-  return {
-    "Authorization": `Bearer ${token}`,
-  };
 }
 
 async function throwIfResNotOk(res: Response) {
@@ -57,14 +62,18 @@ export const getQueryFn: <T>(options: {
       return null;
     }
 
-    await throwIfResNotOk(res);
+    if (!res.ok) {
+      const text = (await res.text()) || res.statusText;
+      throw new Error(`${res.status}: ${text}`);
+    }
+    
     return await res.json();
   };
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
+      queryFn: getQueryFn({ on401: "returnNull" }),
       refetchInterval: false,
       refetchOnWindowFocus: false,
       staleTime: Infinity,
