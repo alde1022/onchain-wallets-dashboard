@@ -329,41 +329,33 @@ export async function registerRoutes(
 
       switch (reportId) {
         case "form8949":
-          csvContent = "Description,Date Acquired,Date Sold,Proceeds,Cost Basis,Gain or Loss
-";
+          csvContent = "Description,Date Acquired,Date Sold,Proceeds,Cost Basis,Gain or Loss\n";
           for (const d of summary.disposals) {
             csvContent += `"${d.tokenSymbol}",` +
               `"${new Date(d.disposedAt).toISOString().split('T')[0]}",` +
               `"${new Date(d.disposedAt).toISOString().split('T')[0]}",` +
               `${d.proceedsUsd},` +
               `${d.costBasisUsd},` +
-              `${d.gainLossUsd}
-`;
+              `${d.gainLossUsd}\n`;
           }
           filename = `form8949-${year}.csv`;
           break;
 
         case "schedule-d":
-          csvContent = "Category,Short-Term Gain,Short-Term Loss,Long-Term Gain,Long-Term Loss,Net
-";
-          csvContent += `"Summary",${summary.shortTermGains},${summary.shortTermLosses},${summary.longTermGains},${summary.longTermLosses},${summary.netGainLoss}
-`;
+          csvContent = "Category,Short-Term Gain,Short-Term Loss,Long-Term Gain,Long-Term Loss,Net\n";
+          csvContent += `"Summary",${summary.shortTermGains},${summary.shortTermLosses},${summary.longTermGains},${summary.longTermLosses},${summary.netGainLoss}\n`;
           filename = `schedule-d-${year}.csv`;
           break;
 
         case "income":
-          csvContent = "Type,Amount USD
-";
-          csvContent += `"Total Income",${summary.totalIncome}
-`;
+          csvContent = "Type,Amount USD\n";
+          csvContent += `"Total Income",${summary.totalIncome}\n`;
           filename = `income-report-${year}.csv`;
           break;
 
         default:
-          csvContent = "Report Type,Data
-";
-          csvContent += `"${reportId}","Generated for ${year}"
-`;
+          csvContent = "Report Type,Data\n";
+          csvContent += `"${reportId}","Generated for ${year}"\n`;
           filename = `${reportId}-${year}.csv`;
       }
 
