@@ -1,15 +1,13 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
-import { getAuth } from "firebase/auth";
+import { getIdToken } from "@/hooks/use-auth";
 
 const API_BASE = import.meta.env.VITE_API_URL || "";
 
 async function getAuthHeaders(): Promise<HeadersInit> {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  if (!user) {
+  const token = await getIdToken();
+  if (!token) {
     return {};
   }
-  const token = await user.getIdToken();
   return {
     "Authorization": `Bearer ${token}`,
   };
