@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatCard } from "@/components/stat-card";
 import { ChainBadge } from "@/components/chain-badge";
@@ -85,7 +86,7 @@ export default function Dashboard() {
             Overview of your crypto tax status for 2024
           </p>
         </div>
-        <Button data-testid="button-add-wallet">
+        <Link href="/wallets"><Button data-testid="button-add-wallet">
           <PlusCircle className="h-4 w-4 mr-2" />
           Add Wallet
         </Button>
