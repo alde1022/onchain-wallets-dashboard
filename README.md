@@ -1,5 +1,13 @@
 # Open Crypto Tax Helper
 
+## What this is
+
+Open Crypto Tax Helper is a self-hosted wallet/transaction records organizer for crypto tax review. It helps find missing cost basis, organize transactions, and expose structured data to AI agents or tax professionals.
+
+It is informational software only. It is not tax, legal, accounting, investment, or compliance advice.
+
+Status: standalone open-source utility, separate from CheapTokens and other payments products.
+
 **Free, self-hosted, AI-agent-friendly crypto records organizer.**
 
 Connect your wallets, fix the missing-cost-basis problem, and produce a clean, structured dataset for your own review, your AI agent, or a qualified tax professional.
